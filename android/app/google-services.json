@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "983877210087",
+    "project_id": "planner-list-28e16",
+    "storage_bucket": "planner-list-28e16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983877210087:android:681833e387886cc45ef742",
+        "android_client_info": {
+          "package_name": "com.example.coding_minds_sample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAacG4PgnDMBcXwny698rRMy7d9dWzthGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

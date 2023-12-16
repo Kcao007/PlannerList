@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,6 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  var userUID = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +30,11 @@ class _HomePageState extends State<HomePage> {
         ]
       ),
 
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Loading...', style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
+            Text("UID: " + userUID, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
