@@ -12,7 +12,7 @@ class _RankingPageState extends State<RankingPage> {
   final List<Tab> tabs = <Tab>[
     const Tab(text: 'Day',),
     const Tab(text: 'Week',),
-    const Tab(text: 'Month',),
+    const Tab(text: 'All',),
   ];
 
   @override
@@ -24,9 +24,7 @@ class _RankingPageState extends State<RankingPage> {
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             toolbarHeight: 40,
-            title: const Text(
-                'Rank Screen'
-            ),
+            title: const Text('Ranking'),
             bottom: TabBar(
               tabs: tabs,
               indicatorColor: Colors.white,

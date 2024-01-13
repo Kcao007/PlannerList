@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:coding_minds_sample/newTask.dart';
+
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -12,7 +14,7 @@ class _TaskPageState extends State<TaskPage> {
   final List<Tab> tabs = <Tab>[
     const Tab(text: 'Day',),
     const Tab(text: 'Week',),
-    const Tab(text: 'Month',),
+    const Tab(text: 'All',),
   ];
 
   @override
@@ -24,9 +26,7 @@ class _TaskPageState extends State<TaskPage> {
             automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             toolbarHeight: 40,
-            title: const Text(
-                'Tasks Screen'
-            ),
+            title: const Text('Tasks'),
             bottom: TabBar(
               tabs: tabs,
               indicatorColor: Colors.white,
@@ -59,7 +59,27 @@ class _RankState extends State<Rank> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Text("Current Tab: " + widget.tab!)
+      body: Text("Current Tab: " + widget.tab!),
+
+
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+
+        children: <Widget>[
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NewTaskPage()));
+            },
+            label: const Text('Add Task', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+            icon: const Icon(Icons.add_box),
+          ),
+
+          const SizedBox(
+            height: 20,
+          ),
+        ]
+      )
     );
   }
 }

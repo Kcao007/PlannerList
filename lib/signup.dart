@@ -98,7 +98,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
 
                   ElevatedButton(onPressed: () {
-                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));},
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NavigationPage()));},
                       child: const Text('Sign In')
                   ),
