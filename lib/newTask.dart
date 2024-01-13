@@ -53,7 +53,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
             const SizedBox(
               height : 15,
             ),
-g
+
             SizedBox(
               width: 350,
               child: TextField(
