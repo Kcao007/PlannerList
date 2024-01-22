@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:coding_minds_sample/firebase/db.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,6 +11,42 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   var userUID = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initState () {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      getMyInfo().then((value) {
+
+        if (value == null) {
+          showMyDialog();
+        }
+
+        else {
+          getLogs();
+        }
+
+      });
+    });
+
+  }
+
+  getLogs() async {
+
+  }
+
+  Future<void> showMyDialog() async {
+    showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Update Profile'),
+        content: const Text('Before using the app, please visit the profile tab and submit user info.'),
+        actions: [
+          TextButton(onPressed: () {
+            Navigator.of(context).pop();
+          }, child: const Text('OK'))
+        ],);
+    },);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +72,10 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: height * 0.6,
                 width: width,
-                child: Card(
+                child: const Card(
                   color: Colors.white60,
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     child: SingleChildScrollView(
                       child: Column(
 

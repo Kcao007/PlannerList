@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewTaskPage extends StatefulWidget {
@@ -10,19 +11,20 @@ class NewTaskPage extends StatefulWidget {
 class _NewTaskPageState extends State<NewTaskPage> {
 
   final nameController = TextEditingController();
-  final timeController = TextEditingController();
+  final hoursController = TextEditingController();
+  final minutesController = TextEditingController();
   final descriptionController = TextEditingController();
+  final dateController = TextEditingController();
 
   final List<String> priority = <String>['highest', 'high', 'medium', 'low', 'lowest'];
-  final List<int> day = <int>[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
-  final List<String> month = <String>['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   final List<String> type = <String>['Practice', 'Chores', 'School', 'Lesson', 'Other'];
+
+  bool showCalendar = false;
 
   @override
   Widget build(BuildContext context) {
 
     String dropDownValue = priority.first;
-    int dropDownDay = day.first;
 
     return Scaffold(
       appBar: AppBar(
@@ -72,14 +74,14 @@ class _NewTaskPageState extends State<NewTaskPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Task Type', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+                const Text('Task Type:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
 
                 const SizedBox(
                   width: 10,
                 ),
 
                 DropdownMenu<String>(
-                  width: 225,
+                  width: 215,
                   initialSelection: type.first,
                   onSelected: (String? value) {
                     setState(() {
@@ -100,57 +102,90 @@ class _NewTaskPageState extends State<NewTaskPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Date', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+                const Text('Date:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
 
                 const SizedBox(
                   width: 10,
                 ),
 
-                DropdownMenu<int>(
-                  width: 100,
-                  initialSelection: day.first,
-                  onSelected: (int? value) {
-                    setState(() {
-                      dropDownDay = value!;
-                    });
-                  },
-                  dropdownMenuEntries: day.map<DropdownMenuEntry<int>>((int value) {
-                    return DropdownMenuEntry<int>(value: value, label: day.elementAt(value - 1).toString());
-                  }).toList(),
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Task Date',
+                    ),
+                    controller: dateController,
+                  ),
                 ),
 
                 const SizedBox(
                   width: 10,
                 ),
 
-                DropdownMenu<String>(
-                  width: 175,
-                  initialSelection: month.first,
-                  onSelected: (String? value) {
-                    setState(() {
-                      dropDownValue = value!;
-                    });
-                  },
-                  dropdownMenuEntries: month.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(value: value, label: value);
-                  }).toList(),
-                ),
+                IconButton(onPressed: () {
+                  setState(() {
+                    if(dateController.text.isEmpty) {
+                      dateController.text = DateTime.now().toString().substring(0, 10);
+                    }
+                    showCalendar = !showCalendar;
+                  });
+                }, icon: const Icon(Icons.calendar_month_rounded)),
+
               ],
             ),
+
+            showCalendar
+              ?SizedBox(
+              height: 100,
+              child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: DateTime.now(),
+              onDateTimeChanged: (DateTime newDateTime) {
+                setState(() {
+                  dateController.text = newDateTime.toString().substring(0, 10);
+                });
+              },)
+            ):
+              const SizedBox(),
 
             const SizedBox(
               height: 10,
             ),
 
-            SizedBox(
-              width: 350,
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Time Allotted',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text('Duration:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+
+                const SizedBox(
+                  width: 10,
                 ),
-                controller: timeController,
-              ),
+
+                SizedBox(
+                  width: 110,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Hours',
+                    ),
+                    controller: hoursController,
+                  ),
+                ),
+
+                const SizedBox(
+                  width: 10,
+                ),
+
+                SizedBox(
+                  width: 110,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Minutes',
+                    ),
+                    controller: minutesController,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(
@@ -160,14 +195,14 @@ class _NewTaskPageState extends State<NewTaskPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Priority', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+                const Text('Priority:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
 
                 const SizedBox(
                   width: 10,
                 ),
 
                 DropdownMenu<String>(
-                  width: 255,
+                  width: 247,
                   initialSelection: priority.first,
                   onSelected: (String? value) {
                     setState(() {

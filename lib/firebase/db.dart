@@ -3,7 +3,7 @@ import 'package:coding_minds_sample/firebase/authentication.dart';
 
 String collection = "users";
 
-Future<Map?>getUserInfo (String uid) async{
+Future<Map?> getUserInfo (String uid) async{
   Map? data;
   await FirebaseFirestore.instance
     .collection(collection)
@@ -23,9 +23,19 @@ Future<Map?>getUserInfo (String uid) async{
   );
 }
 
-Future<Map?>getMyInfo () async {
+Future<Map?> getMyInfo () async {
   Map? data;
   String uid = AuthenticationHelper().uid;
   data = await getUserInfo(uid);
   return data;
+}
+
+Future<bool> editUserInfo (Map<String, dynamic> data) async {
+  String uid = AuthenticationHelper().uid;
+  FirebaseFirestore.instance
+    .collection(collection)
+    .doc(uid)
+    .set(data, SetOptions(merge: true));
+
+  return true;
 }
