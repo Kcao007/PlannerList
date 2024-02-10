@@ -1,4 +1,4 @@
-import 'package:coding_minds_sample/login.dart';
+import 'package:coding_minds_sample/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';

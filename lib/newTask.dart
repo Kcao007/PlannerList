@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:coding_minds_sample/firebase/db.dart';
+import 'package:coding_minds_sample/utils.dart';
+import 'package:coding_minds_sample/tasks.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -10,7 +13,7 @@ class NewTaskPage extends StatefulWidget {
 
 class _NewTaskPageState extends State<NewTaskPage> {
 
-  final nameController = TextEditingController();
+  final taskNameController = TextEditingController();
   final hoursController = TextEditingController();
   final minutesController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -20,6 +23,41 @@ class _NewTaskPageState extends State<NewTaskPage> {
   final List<String> type = <String>['Practice', 'Chores', 'School', 'Lesson', 'Other'];
 
   bool showCalendar = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  addTask() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if(!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+
+    Map<String, dynamic> TaskInfo = {
+      "taskName": taskNameController.text.trim(),
+      "taskDuration": convertTime(hoursController, minutesController),
+      "taskDescription": descriptionController.text.trim(),
+      "taskDate": dateController.text.trim(),
+      "taskDone": false,
+    };
+
+    buildLoading(context);
+    addTaskLog(TaskInfo).then((value) {
+      //two pops; one for loading, one pop for leaving newTask screen
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    });
+  }
+
+  static String convertTime(TextEditingController hours, TextEditingController minutes) {
+    double numHours = double.parse(hours.text.trim());
+    double numMinutes = double.parse(minutes.text.trim());
+    return (numHours + numMinutes / 60).toStringAsFixed(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,207 +71,228 @@ class _NewTaskPageState extends State<NewTaskPage> {
       ),
       //task name, task date, task time, task type, task difficulty/priority, task description
 
-      body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-
-          children:[
-
-            const SizedBox(
-              height : 10,
-            ),
-
-            const Text('New Task', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
-
-            Container(
-                height : 3,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+        
+            children:[
+        
+              const SizedBox(
+                height : 10,
+              ),
+        
+              const Text('New Task', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+        
+              Container(
+                  height : 3,
+                  width: 350,
+                  color: Colors.black
+              ),
+        
+              const SizedBox(
+                height : 15,
+              ),
+        
+              SizedBox(
                 width: 350,
-                color: Colors.black
-            ),
-
-            const SizedBox(
-              height : 15,
-            ),
-
-            SizedBox(
-              width: 350,
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Task Name',
-                ),
-                controller: nameController,
-              ),
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Task Type:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                DropdownMenu<String>(
-                  width: 215,
-                  initialSelection: type.first,
-                  onSelected: (String? value) {
-                    setState(() {
-                      dropDownValue = value!;
-                    });
-                  },
-                  dropdownMenuEntries: type.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(value: value, label: value);
-                  }).toList(),
-                ),
-              ],
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Date:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Task Date',
-                    ),
-                    controller: dateController,
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Task Name',
                   ),
+                  controller: taskNameController,
                 ),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                IconButton(onPressed: () {
+              ),
+        
+              const SizedBox(
+                height: 10,
+              ),
+        
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Task Type:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  DropdownMenu<String>(
+                    width: 215,
+                    onSelected: (String? value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries: type.map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(value: value, label: value);
+                    }).toList(),
+                  ),
+                ],
+              ),
+        
+              const SizedBox(
+                height: 10,
+              ),
+        
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Date:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  SizedBox(
+                    width: 220,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Task Date',
+                      ),
+                      controller: dateController,
+                    ),
+                  ),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  IconButton(onPressed: () {
+                    setState(() {
+                      if(dateController.text.isEmpty) {
+                        dateController.text = DateTime.now().toString().substring(0, 10);
+                      }
+                      showCalendar = !showCalendar;
+                    });
+                  }, icon: const Icon(Icons.calendar_month_rounded)),
+        
+                ],
+              ),
+        
+              showCalendar
+                ?SizedBox(
+                height: 100,
+                child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: DateTime.now(),
+                onDateTimeChanged: (DateTime newDateTime) {
                   setState(() {
-                    if(dateController.text.isEmpty) {
-                      dateController.text = DateTime.now().toString().substring(0, 10);
-                    }
-                    showCalendar = !showCalendar;
+                    dateController.text = newDateTime.toString().substring(0, 10);
                   });
-                }, icon: const Icon(Icons.calendar_month_rounded)),
-
-              ],
-            ),
-
-            showCalendar
-              ?SizedBox(
-              height: 100,
-              child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: DateTime.now(),
-              onDateTimeChanged: (DateTime newDateTime) {
-                setState(() {
-                  dateController.text = newDateTime.toString().substring(0, 10);
-                });
-              },)
-            ):
-              const SizedBox(),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Duration:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                SizedBox(
-                  width: 110,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Hours',
-                    ),
-                    controller: hoursController,
-                  ),
-                ),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                SizedBox(
-                  width: 110,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Minutes',
-                    ),
-                    controller: minutesController,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Priority:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-
-                const SizedBox(
-                  width: 10,
-                ),
-
-                DropdownMenu<String>(
-                  width: 247,
-                  initialSelection: priority.first,
-                  onSelected: (String? value) {
-                    setState(() {
-                      dropDownValue = value!;
-                    });
-                  },
-                  dropdownMenuEntries: priority.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(value: value, label: value);
-                  }).toList(),
-                ),
-              ],
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            SizedBox(
-              width: 350,
-              child: TextField(
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Task Description (Optional)',
-                ),
-                controller: descriptionController,
+                },)
+              ):
+                const SizedBox(),
+        
+              const SizedBox(
+                height: 10,
               ),
-            ),
+        
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Duration:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  SizedBox(
+                    width: 110,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLength: 1,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Hours',
+                      ),
+                      controller: hoursController,
+                    ),
+                  ),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  SizedBox(
+                    width: 110,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      maxLength: 2,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Minutes',
+                      ),
+                      controller: minutesController,
+                    ),
+                  ),
+                ],
+              ),
+        
+              const SizedBox(
+                height: 10,
+              ),
+        
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text('Priority:', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+        
+                  const SizedBox(
+                    width: 10,
+                  ),
+        
+                  DropdownMenu<String>(
+                    width: 247,
+                    initialSelection: priority.first,
+                    onSelected: (String? value) {
+                      setState(() {
+                        dropDownValue = value!;
+                      });
+                    },
+                    dropdownMenuEntries: priority.map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(value: value, label: value);
+                    }).toList(),
+                  ),
+                ],
+              ),
+        
+              const SizedBox(
+                height: 10,
+              ),
+        
+              SizedBox(
+                width: 350,
+                child: TextField(
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Task Description (Optional)',
+                  ),
+                  controller: descriptionController,
+                ),
+              ),
+        
+              const SizedBox(
+                height: 10,
+              ),
+        
+              ElevatedButton(
+                  onPressed: (){
+                    addTask();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TaskPage()));
+                  },
+                  child:
+                  const Text('Add Task', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
 
-          ],
-        )
+              )
+        
+            ],
+          )
+        ),
       )
     );
   }

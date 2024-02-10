@@ -11,13 +11,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   var userUID = FirebaseAuth.instance.currentUser!.uid;
+  List toDoTask = [];
 
   @override
   void initState () {
     super.initState();
     Future.delayed(Duration.zero, () {
       getMyInfo().then((value) {
-
         if (value == null) {
           showMyDialog();
         }
@@ -32,7 +32,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   getLogs() async {
-
+    getMyInfo().then((value) {
+      setState(() {
+        if(value != null && value.containsKey("Schedule")) {
+          toDoTask = value["Schedule"];
+        }
+      });
+    });
   }
 
   Future<void> showMyDialog() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/firebase/db.dart';
+import 'package:coding_minds_sample/utils.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -29,11 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
     getMyInfo().then((info) {
       if (info != null) {
         hasGender = true;
-
         setState(() {
           usernameController.text = info["nickname"];
           ageController.text = info["age"];
-          bioController.text = info["biography"];
+          bioController.text = info["bio"];
           DBgender = info["gender"];
         });
       }
@@ -54,28 +54,11 @@ class _ProfilePageState extends State<ProfilePage> {
       "gender": DBgender,
     };
 
-    buildLoading();
+    buildLoading(context);
     editUserInfo(userInfo).then((value) {
       Navigator.of(context).pop();
-      snackBarBuilder("User info updated");
+      snackBarBuilder("User info updated", context);
     });
-  }
-
-  buildLoading() {
-    return showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) {
-      return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.blue
-            ),
-          )
-      );
-    });
-  }
-
-  snackBarBuilder(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -124,45 +107,48 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
 
-                SizedBox(
-                  width: 350,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Age',
-                    ),
-                    controller: ageController,
-                  ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Gender', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
+
+                      const SizedBox(
+                        width: 10,
+                      ),
+
+                      DropdownMenu<String>(
+                        width: 255,
+                        initialSelection: hasGender? DBgender: gender.first,
+                        requestFocusOnTap: false,
+                        onSelected: (String? value) {
+                          FocusScope.of(context).unfocus();
+                          setState(() {
+                            DBgender = value!;
+                          });
+                        },
+                        dropdownMenuEntries: gender.map<DropdownMenuEntry<String>>((String value) {
+                          return DropdownMenuEntry<String>(value: value, label: value);
+                        }).toList(),
+                      ),
+
+                    ]
                 ),
 
                 const SizedBox(
                   height: 10,
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Gender', style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold)),
-
-                    const SizedBox(
-                      width: 10,
+                SizedBox(
+                  width: 350,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    maxLength: 3,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Age',
                     ),
-
-                    DropdownMenu<String>(
-                      width: 255,
-                      initialSelection: hasGender? DBgender: gender.first,
-                      requestFocusOnTap: true,
-                      onSelected: (String? value) {
-                        setState(() {
-                          DBgender = value!;
-                        });
-                      },
-                      dropdownMenuEntries: gender.map<DropdownMenuEntry<String>>((String value) {
-                        return DropdownMenuEntry<String>(value: value, label: value);
-                      }).toList(),
-                    ),
-
-                  ]
+                    controller: ageController,
+                  ),
                 ),
 
                 const SizedBox(

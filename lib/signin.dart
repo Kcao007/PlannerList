@@ -151,14 +151,12 @@ class _LoginPageState extends State<LoginPage> {
                   email: email,
                   password: password
               ).then((value) {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const NavigationPage())
-                );
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));
+                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NavigationPage()));},
 
-              }).onError((error, stackTrace) {
-                showAlertDialog(context, "Error ${error.toString()}");
-              });
+                }).onError((error, stackTrace) {
+                  showAlertDialog(context, "Error ${error.toString()}");
+                });
 
               debugPrint('Clicked log in');
             },

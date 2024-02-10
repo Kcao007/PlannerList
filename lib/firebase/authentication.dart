@@ -6,7 +6,7 @@ class AuthenticationHelper {
   get user => auth.currentUser;
   get uid => user.uid;
 
-  String getUID () {
+  String getUID() {
     return user.uid;
   }
 
