@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coding_minds_sample/firebase/authentication.dart';
+import 'package:coding_minds_sample/tasks.dart';
+import 'package:coding_minds_sample/utils.dart';
+
 
 String collection = "users";
 String uid = AuthenticationHelper().getUID();
@@ -92,5 +95,14 @@ Future<bool> updateTaskLog(List tasks) async {
       .update({"taskLog": tasks});
 
   return true;
+}
+
+Future<void> sortTaskLog() async {
+  String uid = AuthenticationHelper().uid;
+  List taskLog = await getMyTaskLog();
+
+  insertionSortTasks(taskLog);
+  updateTaskLog(taskLog);
+
 }
 

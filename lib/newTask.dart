@@ -33,6 +33,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   }
 
+  //adds task using info provided in the newTask screen
   addTask() {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -58,13 +59,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     });
-  }
-
-  //method for adding together the hours and minutes values from creating a new task
-  static String convertTime(TextEditingController hours, TextEditingController minutes) {
-    double numHours = double.parse(hours.text.trim());
-    double numMinutes = double.parse(minutes.text.trim());
-    return (numHours + numMinutes / 60).toStringAsFixed(2);
   }
 
   @override
@@ -245,7 +239,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
         
                   DropdownMenu<String>(
                     width: 247,
-                    initialSelection: priority.first,
                     onSelected: (String? value) {
                       setState(() {
                         DBPriority = value!;
@@ -286,6 +279,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         int.parse(minutesController.text) >= 0 &&
                         int.parse(hoursController.text) >= 0) {
                       addTask();
+                      sortTaskLog();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => const TaskPage()));

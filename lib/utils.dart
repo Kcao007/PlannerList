@@ -54,3 +54,30 @@ Map startEndDate(value) {
 
   return{"startDate" : startDate, "endDate" : endDate};
 }
+
+//method for adding together the hours and minutes values from creating a new task
+String convertTime(TextEditingController hours, TextEditingController minutes) {
+  double numHours = double.parse(hours.text.trim());
+  double numMinutes = double.parse(minutes.text.trim());
+return (numHours + numMinutes / 60).toStringAsFixed(2);
+}
+
+//simple insertion sort algorithm for sorting tasks by date by comparing them using .isAfter()
+void insertionSortTasks(List taskList) {
+  int j;
+  Map<String, dynamic> temp;
+
+  for(int i = 0; i < taskList.length; i++) {
+    DateTime taskDate = DateTime.parse(taskList[i]["taskDate"]);
+    temp = taskList[i];
+    j = i - 1;
+
+    while (j >= 0 && DateTime.parse(taskList[j]["taskDate"]).isAfter(taskDate)) {
+
+      taskList[j + 1] = taskList[j];
+      j -= 1;
+    }
+
+    taskList[j + 1] = temp;
+  }
+}

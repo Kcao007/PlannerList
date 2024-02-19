@@ -113,10 +113,10 @@ class _TaskState extends State<Task> {
   //
   Future<List<Map<String, dynamic>>> getTasksByDateRange(String range) async {
     List<Map<String, dynamic>> tasks = [];
+    taskLog = await getMyTaskLog();
 
     //All tab should have all tasks in list
     if(widget.tab! == "All") {
-      taskLog = await getMyTaskLog();
 
       for (int i = 0; i < taskLog.length; i++) {
         Map<String, dynamic> element = taskLog[i];
@@ -131,7 +131,6 @@ class _TaskState extends State<Task> {
       Map value = startEndDate(range);
       DateTime startDate = value["startDate"];
       DateTime endDate = value["endDate"];
-      taskLog = await getMyTaskLog();
 
       //goes through all tasks in taskLog
       for(int i = 0; i < taskLog.length; i++) {
@@ -172,7 +171,7 @@ class _TaskState extends State<Task> {
                   //how it displays each individual task
                   return ListTile(
                     title: Text(tasks[index].name),
-                    subtitle: Text('Date/Time: ${tasks[index].date}, ${tasks[index].time}Hrs'),
+                    subtitle: Text('Date/Priority: ${tasks[index].date}, ${tasks[index].priority}'),
 
                     trailing: Checkbox(
                       onChanged: (bool? value) {
