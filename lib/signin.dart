@@ -15,31 +15,36 @@ class _SignInPageState extends State<SignInPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  //signs user in
   Future<bool> signUserIn() async {
     showDialog(
       context: context, builder: (context) {
         return const Center(
+          //loading circle
           child: CircularProgressIndicator()
         );
       }
     );
 
+    //checks if the database has a user with these credentials
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
       Navigator.pop(context);
       return true;
     }
 
+    //if not, say invalid credentials
     on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       showDialog(context: context, builder: (context) {
-        return const AlertDialog(title: Text("Invalid login, please try again."));
-      }
-      );
+        return const AlertDialog(title: Text("Invalid credentials, please try again."));
+      });
+
       return false;
     }
   }
 
+  //what pops up if login fails
   showAlertDialog(BuildContext context, String text) {
 
     // set up the button
@@ -109,7 +114,6 @@ class _SignInPageState extends State<SignInPage> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: <Widget> [
 
                 const Text(
@@ -144,7 +148,6 @@ class _SignInPageState extends State<SignInPage> {
                   password: password
               ).then((value) {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NavigationPage()));},
 
                 }).onError((error, stackTrace) {
                   showAlertDialog(context, "Error ${error.toString()}");

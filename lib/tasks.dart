@@ -86,11 +86,12 @@ class _TaskState extends State<Task> {
   void initState() {
     super.initState();
     setTask();
+    sortTaskLog();
   }
 
-  //adds tasks to list
+  //adds tasks to screen
   void setTask() {
-    //calls getTasksByDateRange and uses it to add things to display
+    //gets tasks within the date range and adds them to tasks
     getTasksByDateRange(widget.tab!).then((value) {
       setState(() {
         for(var element in value) {
@@ -156,7 +157,7 @@ class _TaskState extends State<Task> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("No Tasks") // fix font stuff later
+                const Text('No More Tasks!!!', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
               ],
             ),
           )

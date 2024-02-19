@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coding_minds_sample/firebase/authentication.dart';
-import 'package:coding_minds_sample/tasks.dart';
 import 'package:coding_minds_sample/utils.dart';
 
 
@@ -35,7 +34,7 @@ Future<Map?> getMyInfo() async {
   return data;
 }
 
-//updages user info based off of changes made to profile.dart
+//updates user info based off of changes made to profile.dart
 Future<bool> editUserInfo (Map<String, dynamic> data) async {
   FirebaseFirestore.instance
     .collection(collection)
@@ -78,17 +77,13 @@ Future<List> getMyTaskLog() async {
 Future<bool> addTaskLog(Map data) async {
     List taskLog = await getTaskLog(uid);
     taskLog.add(data);
-    FirebaseFirestore.instance
-        .collection(collection)
-        .doc(uid)
-        .update({"taskLog": taskLog});
+    updateTaskLog(taskLog);
 
     return true;
 }
 
-//updates a task inside of taskLog
+//overwrites taskLog with List tasks
 Future<bool> updateTaskLog(List tasks) async {
-  String uid = AuthenticationHelper().uid;
   FirebaseFirestore.instance
       .collection(collection)
       .doc(uid)
@@ -97,8 +92,8 @@ Future<bool> updateTaskLog(List tasks) async {
   return true;
 }
 
+//sorts TaskLog based on task date by calling insertionSort Tasks and then overwriting the old taskLog with updateTaskLog
 Future<void> sortTaskLog() async {
-  String uid = AuthenticationHelper().uid;
   List taskLog = await getMyTaskLog();
 
   insertionSortTasks(taskLog);

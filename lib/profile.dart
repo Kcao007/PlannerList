@@ -26,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
     getInfo();
   }
 
+  //calls getMyInfo and stores values to be displayed on profile screen in textEditingControllers
   getInfo() async {
     getMyInfo().then((info) {
       if (info != null) {
@@ -40,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  //to change the user's info in the database by changing profile screen values
   updateInfo() {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -57,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
     buildLoading(context);
     editUserInfo(userInfo).then((value) {
       Navigator.of(context).pop();
+      //called from util to create a notification
       snackBarBuilder("User info updated", context);
     });
   }

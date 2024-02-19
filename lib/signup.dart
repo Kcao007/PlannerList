@@ -13,6 +13,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
 
+  //accesses the database to create a new user
   Future<bool> createNewUser (String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -138,9 +139,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: () {
                       if(_formKey.currentState!.validate()) {
                         try {
+                          //creates a new user and sets screen to home page with navigation toolbar
                           FirebaseAuth.instance.createUserWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text,
+
                           ).then((_) {
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));
                           });
@@ -151,7 +154,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         }
                       }
                     },
-
 
                     child: const Text("Sign up")
                 ),

@@ -19,8 +19,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
   final descriptionController = TextEditingController();
   final dateController = TextEditingController();
 
-  final List<String> priority = <String>['highest', 'high', 'medium', 'low', 'lowest'];
-  final List<String> type = <String>['Practice', 'Chores', 'School', 'Lesson', 'Other'];
+  final List<String> priority = <String>['Highest', 'High', 'Medium', 'Low', 'Lowest'];
+  final List<String> type = <String>['Practice', 'Event', 'School', 'Homework', 'Other'];
 
   String? DBPriority;
   String? DBType;
@@ -274,10 +274,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
               ElevatedButton(
                   onPressed: (){
                     //ensure that time is less than 24 hours and that minutes is not funky
-                    if (int.parse(minutesController.text) < 60 &&
-                        int.parse(hoursController.text) < 24 &&
-                        int.parse(minutesController.text) >= 0 &&
-                        int.parse(hoursController.text) >= 0) {
+                    if (int.parse(hoursController.text) < 24 &&
+                        int.parse(minutesController.text) < 60 &&
+                        int.parse(convertTime(hoursController, minutesController)) > 0) {
                       addTask();
                       sortTaskLog();
                       Navigator.pushReplacement(
