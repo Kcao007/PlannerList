@@ -2,7 +2,6 @@ import 'package:coding_minds_sample/navigation.dart';
 import 'package:coding_minds_sample/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:coding_minds_sample/fireStore.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

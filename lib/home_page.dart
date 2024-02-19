@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  //prompts user to add user info to profile consistently
   Future<void> showMyDialog() async {
     showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
@@ -96,6 +97,7 @@ class _HomePageState extends State<HomePage> {
 
       ),
 
+      //generate schedule button
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -119,5 +121,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-//            Text("UID: " + userUID, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),

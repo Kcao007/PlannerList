@@ -36,6 +36,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   addTask() {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
+    //unfocuses everything
     if(!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
@@ -51,13 +52,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
     };
 
     buildLoading(context);
+    //calls addTaskLog to add this task to the taskLog
     addTaskLog(TaskInfo).then((value) {
-      //two pops; one for loading, one pop for leaving newTask screen
+      //two pops; one for loading, one for leaving newTask screen
       Navigator.of(context).pop();
       Navigator.of(context).pop();
     });
   }
 
+  //method for adding together the hours and minutes values from creating a new task
   static String convertTime(TextEditingController hours, TextEditingController minutes) {
     double numHours = double.parse(hours.text.trim());
     double numMinutes = double.parse(minutes.text.trim());
@@ -81,10 +84,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
         
             children:[
-        
-              const SizedBox(
-                height : 10,
-              ),
         
               const Text('New Task', style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
         
@@ -205,7 +204,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     width: 110,
                     child: TextField(
                       keyboardType: TextInputType.number,
-                      maxLength: 1,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Hours',
@@ -222,7 +220,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     width: 110,
                     child: TextField(
                       keyboardType: TextInputType.number,
-                      maxLength: 2,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Minutes',
@@ -283,10 +280,19 @@ class _NewTaskPageState extends State<NewTaskPage> {
         
               ElevatedButton(
                   onPressed: (){
-                    addTask();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const TaskPage()));
+                    //ensure that time is less than 24 hours and that minutes is not funky
+                    if (int.parse(minutesController.text) < 60 &&
+                        int.parse(hoursController.text) < 24 &&
+                        int.parse(minutesController.text) >= 0 &&
+                        int.parse(hoursController.text) >= 0) {
+                      addTask();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const TaskPage()));
+                    }
+                    else{
+                      snackBarBuilder("Invalid duration", context);
+                    }
                   },
                   child:
                   const Text('Add Task', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),

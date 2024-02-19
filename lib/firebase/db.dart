@@ -4,6 +4,7 @@ import 'package:coding_minds_sample/firebase/authentication.dart';
 String collection = "users";
 String uid = AuthenticationHelper().getUID();
 
+//gets the user's info from their user ID
 Future<Map?> getUserInfo (String uid) async{
   Map? data;
   await FirebaseFirestore.instance
@@ -25,11 +26,13 @@ Future<Map?> getUserInfo (String uid) async{
   return data;
 }
 
+//gets the current user's info using getUserInfo
 Future<Map?> getMyInfo() async {
   Map? data = await getUserInfo(uid);
   return data;
 }
 
+//updages user info based off of changes made to profile.dart
 Future<bool> editUserInfo (Map<String, dynamic> data) async {
   FirebaseFirestore.instance
     .collection(collection)
@@ -39,8 +42,7 @@ Future<bool> editUserInfo (Map<String, dynamic> data) async {
   return true;
 }
 
-//Adding Tasks
-
+//gets user's taskLog from their data
 Future<List> getTaskLog(String uid) async {
   List log = [];
   await getUserInfo(uid).then((value) {
@@ -57,6 +59,7 @@ Future<List> getTaskLog(String uid) async {
   return log;
 }
 
+//gets current user's taskLog using getTaskLog
 Future<List> getMyTaskLog() async {
   List log = [];
   String uid = AuthenticationHelper().uid;
@@ -68,6 +71,7 @@ Future<List> getMyTaskLog() async {
   // return data;
 }
 
+//adds to taskLog
 Future<bool> addTaskLog(Map data) async {
     List taskLog = await getTaskLog(uid);
     taskLog.add(data);
@@ -79,6 +83,7 @@ Future<bool> addTaskLog(Map data) async {
     return true;
 }
 
+//updates a task inside of taskLog
 Future<bool> updateTaskLog(List tasks) async {
   String uid = AuthenticationHelper().uid;
   FirebaseFirestore.instance

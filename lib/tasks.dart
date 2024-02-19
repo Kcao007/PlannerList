@@ -1,4 +1,5 @@
 import 'package:coding_minds_sample/firebase/db.dart';
+import 'package:coding_minds_sample/taskInfo.dart';
 import 'package:coding_minds_sample/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/newTask.dart';
@@ -46,6 +47,7 @@ class _TaskPageState extends State<TaskPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
 
+            //add task button, navigates to newTask.dart
             children: <Widget>[
               FloatingActionButton.extended(
                 onPressed: () {
@@ -86,7 +88,9 @@ class _TaskState extends State<Task> {
     setTask();
   }
 
+  //adds tasks to list
   void setTask() {
+    //calls getTasksByDateRange and uses it to add things to display
     getTasksByDateRange(widget.tab!).then((value) {
       setState(() {
         for(var element in value) {
@@ -106,8 +110,11 @@ class _TaskState extends State<Task> {
 
   }
 
+  //
   Future<List<Map<String, dynamic>>> getTasksByDateRange(String range) async {
     List<Map<String, dynamic>> tasks = [];
+
+    //All tab should have all tasks in list
     if(widget.tab! == "All") {
       taskLog = await getMyTaskLog();
 
@@ -118,15 +125,20 @@ class _TaskState extends State<Task> {
       }
     }
 
+    //otherwise it should only have the ones in the date range
     else {
+      //calls startEndDate from utils.dart
       Map value = startEndDate(range);
       DateTime startDate = value["startDate"];
       DateTime endDate = value["endDate"];
       taskLog = await getMyTaskLog();
 
+      //goes through all tasks in taskLog
       for(int i = 0; i < taskLog.length; i++) {
         Map<String, dynamic> element = taskLog[i];
         DateTime elementDate = DateTime.parse(element["taskDate"]);
+
+        //checks if the task's date is within the bounds of the tab
         if(elementDate.isAfter(startDate) && elementDate.isBefore(endDate) || elementDate == startDate) {
           element["index"] = i;
           tasks.add(element);
@@ -137,6 +149,7 @@ class _TaskState extends State<Task> {
   return tasks;
   }
 
+  //actually displaying the tasks on the screen
   @override
   Widget build(BuildContext context) {
     return tasks.isEmpty
@@ -151,11 +164,12 @@ class _TaskState extends State<Task> {
         : ListView(
             children: [
               ListView.builder(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
+                shrinkWrap: true, //make it scrollable
+                physics: const ClampingScrollPhysics(), //make it so you cant scroll off the screen
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
 
+                  //how it displays each individual task
                   return ListTile(
                     title: Text(tasks[index].name),
                     subtitle: Text('Date/Time: ${tasks[index].date}, ${tasks[index].time}Hrs'),
@@ -165,18 +179,24 @@ class _TaskState extends State<Task> {
                         setState(() {
                           tasks[index].completed = value ?? false;
                         });
+
+                        //enables changing the taskDone value from false to true and vice versa
                         taskLog[tasks[index].id] ["taskDone"] = tasks[index].completed;
                         updateTaskLog(taskLog);
                       },
                       value: tasks[index].completed
                     ),
-                    onTap: ,
+
+                    //opens another page, TaskInfo.dart, which gives all details of a task
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TaskInfoPage()));
+                    },
                   );
                 }, //itemBuilder
               ),
 
               const SizedBox(
-              height: 60
+              height: 40
               ),
             ], //ListView children
           );
@@ -184,6 +204,7 @@ class _TaskState extends State<Task> {
   }
 }
 
+//for checking if a task has every value needed
 class TaskItem {
   String name;
   String date;

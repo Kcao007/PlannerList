@@ -19,9 +19,11 @@ class _NavigationPageState extends State<NavigationPage> {
   @override
   void initState() {
     super.initState();
+    //bar at the bottom with these options
     _widgetOptions = [const HomePage(), const TaskPage(), const RankingPage(), const ProfilePage()];
   }
 
+  //change to whatever tab the user taps on
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -35,6 +37,8 @@ class _NavigationPageState extends State<NavigationPage> {
           child:
             _widgetOptions!.elementAt(_selectedIndex),
       ),
+
+      //just a bunch of icons to help the user know what leads to where
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
