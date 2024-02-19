@@ -22,6 +22,9 @@ class _NewTaskPageState extends State<NewTaskPage> {
   final List<String> priority = <String>['highest', 'high', 'medium', 'low', 'lowest'];
   final List<String> type = <String>['Practice', 'Chores', 'School', 'Lesson', 'Other'];
 
+  String? DBPriority;
+  String? DBType;
+
   bool showCalendar = false;
 
   @override
@@ -43,6 +46,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
       "taskDescription": descriptionController.text.trim(),
       "taskDate": dateController.text.trim(),
       "taskDone": false,
+      "taskPriority": DBPriority,
+      "taskType": DBType
     };
 
     buildLoading(context);
@@ -61,8 +66,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    String dropDownValue = priority.first;
 
     return Scaffold(
       appBar: AppBar(
@@ -123,7 +126,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     width: 215,
                     onSelected: (String? value) {
                       setState(() {
-                        dropDownValue = value!;
+                        DBType = value!;
                       });
                     },
                     dropdownMenuEntries: type.map<DropdownMenuEntry<String>>((String value) {
@@ -248,7 +251,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     initialSelection: priority.first,
                     onSelected: (String? value) {
                       setState(() {
-                        dropDownValue = value!;
+                        DBPriority = value!;
                       });
                     },
                     dropdownMenuEntries: priority.map<DropdownMenuEntry<String>>((String value) {

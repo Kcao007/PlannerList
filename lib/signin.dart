@@ -4,14 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/fireStore.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignInPageState extends State<SignInPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // set up the button
     Widget okButton = TextButton(
-      child: Text("OK"),
+      child: const Text("OK"),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -73,16 +73,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children:[
-            const Row(
-
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget> [
-                Text('Login', style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
-              ]
-            ),
+            const Text('Sign In', style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
 
             SizedBox(
               width: 350,
@@ -131,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue),
                   ),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUpPage()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
                   },
                 ),
 

@@ -53,12 +53,19 @@ Future<List> getTaskLog(String uid) async {
       print("error: " + e.toString());
     }
   });
+
   return log;
 }
 
 Future<List> getMyTaskLog() async {
-  List data = await getTaskLog(uid);
-  return data;
+  List log = [];
+  String uid = AuthenticationHelper().uid;
+  log = await getTaskLog(uid);
+  return log;
+
+  // List data = await getTaskLog(uid);
+  //
+  // return data;
 }
 
 Future<bool> addTaskLog(Map data) async {
@@ -70,5 +77,15 @@ Future<bool> addTaskLog(Map data) async {
         .update({"taskLog": taskLog});
 
     return true;
+}
+
+Future<bool> updateTaskLog(List tasks) async {
+  String uid = AuthenticationHelper().uid;
+  FirebaseFirestore.instance
+      .collection(collection)
+      .doc(uid)
+      .update({"taskLog": tasks});
+
+  return true;
 }
 

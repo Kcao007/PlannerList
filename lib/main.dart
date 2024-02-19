@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
             () {
           Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginPage()));
+              MaterialPageRoute(builder: (context) => const SignInPage()));
         }
     );
   }
