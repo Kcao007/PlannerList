@@ -277,18 +277,22 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     if (int.parse(hoursController.text) < 24 &&
                         int.parse(minutesController.text) < 60 &&
                         int.parse(convertTime(hoursController, minutesController)) > 0) {
+
                       addTask();
+                      //sort so that tasks are properly displayed
                       sortTaskLog();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const TaskPage()));
+
+                      //go back to task.dart
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TaskPage()));
                     }
+
+                    //error message
                     else{
                       snackBarBuilder("Invalid duration", context);
                     }
                   },
                   child:
-                  const Text('Add Task', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    const Text('Add Task', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
 
               )
         

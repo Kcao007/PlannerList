@@ -145,7 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 350,
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    maxLength: 3,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Age',

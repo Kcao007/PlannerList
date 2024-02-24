@@ -1,5 +1,4 @@
 import 'package:coding_minds_sample/firebase/db.dart';
-import 'package:coding_minds_sample/taskInfo.dart';
 import 'package:coding_minds_sample/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/newTask.dart';
@@ -189,7 +188,7 @@ class _TaskState extends State<Task> {
 
                     //opens another page, TaskInfo.dart, which gives all details of a task
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TaskInfoPage()));
+
                     },
                   );
                 }, //itemBuilder
@@ -200,11 +199,10 @@ class _TaskState extends State<Task> {
               ),
             ], //ListView children
           );
-
   }
 }
 
-//for checking if a task has every value needed
+//for creating a new Task and verifying that all parts are there
 class TaskItem {
   String name;
   String date;
