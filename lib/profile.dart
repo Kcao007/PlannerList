@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/firebase/db.dart';
+import 'package:coding_minds_sample/firebase/authentication.dart';
 import 'package:coding_minds_sample/utils.dart';
+import 'package:coding_minds_sample/signin.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -179,7 +181,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   child:
                     const Text('Save', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),)
-                )
+                ),
+
+                const SizedBox(
+                  height: 40,
+                ),
+
+                ElevatedButton(
+                  onPressed: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInPage()));
+                  },
+                  child:
+                  const Text('Sign Out', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),)
+                ),
 
               ],
             )

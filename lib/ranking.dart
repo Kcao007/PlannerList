@@ -1,3 +1,4 @@
+import 'package:coding_minds_sample/firebase/db.dart';
 import 'package:flutter/material.dart';
 
 class RankingPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class _RankingPageState extends State<RankingPage> {
   final List<Tab> tabs = <Tab>[
     const Tab(text: 'Day',),
     const Tab(text: 'Week',),
-    const Tab(text: 'All',),
+    const Tab(text: 'Month',),
   ];
 
   @override
@@ -54,10 +55,54 @@ class Rank extends StatefulWidget {
 
 class _RankState extends State<Rank> {
 
+  Map<String, dynamic> rank = {};
+
+  @override
+  void initState() {
+
+    super.initState();
+    getRank();
+  }
+
+  Future<void> getRank() async {
+    getUserRankDate(widget.tab!).then((value) {
+      List<MapEntry<String, dynamic>> rankList = value.entries.toList();
+      rankList.sort((a, b) => b.value.compareTo(a.value));
+
+      setState(() {
+        rank = Map.fromEntries(rankList);
+        print(rank);
+      });
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Text("Current Tab: " + widget.tab!)
+    return ListView(
+      children: [
+        ListView.builder(
+            shrinkWrap: true,
+            //make it scrollable
+            physics: const ClampingScrollPhysics(),
+            //make it so you cant scroll off the screen
+            itemCount: rank.length,
+            itemBuilder: (context, index) {
+              String username = rank.keys.elementAt(index);
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child:
+                  Text("${index + 1}", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                ),
+                title: Text("     ${username}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                trailing: Text("${rank[username]}" + "%",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+
+              );
+            }
+        )
+      ],
     );
   }
 }

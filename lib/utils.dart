@@ -48,6 +48,11 @@ Map startEndDate(value) {
       endDate = currentDate.add(Duration(days: daysUntilSaturday + 1));
       break;
 
+    case "Month":
+      startDate = DateTime(currentDate.year, currentDate.month, 1);
+      endDate = DateTime(currentDate.year, currentDate.month + 1, 1);
+      break;
+
     default:
       throw Exception("Invalid date ranges");
   }

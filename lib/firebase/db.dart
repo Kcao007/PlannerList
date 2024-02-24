@@ -101,3 +101,54 @@ Future<void> sortTaskLog() async {
 
 }
 
+Future<Map<String, dynamic>> getUserRankDate(String range) async {
+  Map<String, dynamic> rank = {};
+  double percentDone = 0;
+
+  Map date = startEndDate(range);
+  DateTime startDate = date["startDate"];
+  DateTime endDate = date["endDate"];
+
+  await FirebaseFirestore
+    .instance
+    .collection(collection)
+    .get()
+    .then((query) {
+
+      for(var uid in query.docs) {
+        print(uid.id);
+        Map<String, dynamic> data = uid.data();
+
+        if(data.containsKey("taskLog") && data["taskLog"].length != 0) {
+          List taskLog = data["taskLog"];
+          int completed = 0;
+          int tasks = 0;
+
+          for(Map<String, dynamic> task in taskLog) {
+            Map<String, dynamic> element = task;
+            DateTime taskDate = DateTime.parse(element["taskDate"]);
+
+            if(taskDate.isBefore(endDate) && taskDate.isAfter(startDate) || taskDate.isAtSameMomentAs(startDate)) {
+              tasks++;
+
+              if(element["taskDone"] == true) {
+                completed++;
+              } //if
+            } //if
+
+            rank[data['nickname']] = (completed / tasks * 100).round();
+
+          } //for
+
+          print(rank);
+
+        } //if
+
+        else {
+          return {data["nickname"], 0};
+        }
+      } //for
+  }); //.then
+
+  return rank;
+}
