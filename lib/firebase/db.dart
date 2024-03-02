@@ -78,23 +78,22 @@ Future<bool> addTaskLog(Map data) async {
     List taskLog = await getTaskLog(uid);
     taskLog.add(data);
     updateTaskLog(taskLog);
-
     return true;
 }
 
 //overwrites taskLog with List tasks
 Future<bool> updateTaskLog(List tasks) async {
   FirebaseFirestore.instance
-      .collection(collection)
-      .doc(uid)
-      .update({"taskLog": tasks});
+    .collection(collection)
+    .doc(uid)
+    .update({"taskLog": tasks});
 
   return true;
 }
 
 //sorts TaskLog based on task date by calling insertionSort Tasks and then overwriting the old taskLog with updateTaskLog
 Future<void> sortTaskLog() async {
-  List taskLog = await getMyTaskLog();
+  List taskLog = await getTaskLog(uid);
 
   insertionSortTasks(taskLog);
   updateTaskLog(taskLog);
@@ -119,7 +118,7 @@ Future<Map<String, dynamic>> getUserRankDate(String range) async {
         print(uid.id);
         Map<String, dynamic> data = uid.data();
 
-        if(data.containsKey("taskLog") && data["taskLog"].length != 0) {
+        if(data.containsKey("taskLog") && data["taskLog"].length != null) {
           List taskLog = data["taskLog"];
           int completed = 0;
           int tasks = 0;
@@ -135,15 +134,12 @@ Future<Map<String, dynamic>> getUserRankDate(String range) async {
                 completed++;
               } //if
             } //if
-
-            rank[data['nickname']] = (completed / tasks * 100).round();
+            rank[data['nickname']] = (completed / tasks * 100).toStringAsFixed(0);
 
           } //for
-
           print(rank);
 
         } //if
-
         else {
           return {data["nickname"], 0};
         }

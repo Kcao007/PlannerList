@@ -276,14 +276,12 @@ class _NewTaskPageState extends State<NewTaskPage> {
                     //ensure that time is less than 24 hours and that minutes is not funky
                     if (int.parse(hoursController.text) < 24 &&
                         int.parse(minutesController.text) < 60 &&
-                        int.parse(convertTime(hoursController, minutesController)) > 0) {
+                        double.parse(convertTime(hoursController, minutesController)) > 0) {
 
                       addTask();
-                      //sort so that tasks are properly displayed
-                      sortTaskLog();
 
                       //go back to task.dart
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TaskPage()));
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TaskPage()));
                     }
 
                     //error message

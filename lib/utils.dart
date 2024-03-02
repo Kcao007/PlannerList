@@ -64,11 +64,12 @@ Map startEndDate(value) {
 String convertTime(TextEditingController hours, TextEditingController minutes) {
   double numHours = double.parse(hours.text.trim());
   double numMinutes = double.parse(minutes.text.trim());
-return (numHours + numMinutes / 60).toStringAsFixed(2);
+
+  return (numHours + (numMinutes / 60)).toStringAsFixed(2);
 }
 
 //simple insertion sort algorithm for sorting tasks by date by comparing them using .isAfter()
-void insertionSortTasks(List taskList) {
+insertionSortTasks(List taskList) {
   int j;
   Map<String, dynamic> temp;
 

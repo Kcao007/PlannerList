@@ -106,4 +106,3 @@ class _RankState extends State<Rank> {
     );
   }
 }
-
