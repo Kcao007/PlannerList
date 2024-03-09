@@ -79,30 +79,41 @@ class _RankState extends State<Rank> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListView.builder(
-            shrinkWrap: true,
-            //make it scrollable
-            physics: const ClampingScrollPhysics(),
-            //make it so you cant scroll off the screen
-            itemCount: rank.length,
-            itemBuilder: (context, index) {
-              String username = rank.keys.elementAt(index);
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child:
-                  Text("${index + 1}", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                ),
-                title: Text("     ${username}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                trailing: Text("${rank[username]}" + "%",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-
-              );
-            }
+    return rank.isEmpty
+        ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Empty Ranking', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+              ],
+            ),
         )
-      ],
-    );
+
+        : ListView(
+          children: [
+            ListView.builder(
+              //make it scrollable
+              shrinkWrap: true,
+              // make it so you cant scroll off the screen
+              physics: const ClampingScrollPhysics(),
+              itemCount: rank.length,
+              itemBuilder: (context, index) {
+                String username = rank.keys.elementAt(index);
+
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child:
+                    Text("${index + 1}", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                  ),
+                  title: Text("     ${username}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                  trailing: Text("${rank[username]}" + "%",
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+
+                );
+              }
+            )
+          ],
+        );
   }
 }

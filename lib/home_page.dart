@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           FloatingActionButton.extended(
             onPressed: () {
-
+              showDateTimePicker(context);
             },
             label: const Text('Generate \nSchedule', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             icon: const Icon(Icons.alarm_add),
@@ -119,5 +119,65 @@ class _HomePageState extends State<HomePage> {
 
 
     );
+  }
+
+  void showDateTimePicker(BuildContext context) async {
+    DateTime date = DateTime.now();
+    TimeOfDay time = TimeOfDay.now();
+
+    //popup for choosing date/time to generate schedule for
+    await showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: const Text("Select your date and time: "),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                //date
+                ListTile(
+                  title: Text("Date: "),
+                  subtitle: Text("${date.month}/${date.day}/${date.year}"),
+
+                  onTap: () async {
+                    DateTime? userDate = await showDatePicker(context: context,
+                        firstDate: DateTime(date.year, date.month - 6, 1),
+                        lastDate: DateTime(date.year, date.month + 6, 1),
+                        initialDate: date);
+
+                    if(userDate != null && userDate != date) {
+                      setState(() {
+                        date = userDate;
+                      });
+                    } // if
+
+                  },
+                ),
+
+                //time
+                ListTile(
+                  title: Text("Time: "),
+                  subtitle: Text("${time.format(context)}"),
+
+                  onTap: () async {
+                    TimeOfDay? userTime = await showTimePicker(context: context, initialTime: time);
+
+                    if(userTime != null && userTime != time) {
+                      setState(() {
+                        time = userTime;
+                      });
+                    }
+                  }
+                )
+              ]
+            );
+          }
+        ),
+
+
+      );
+    });
   }
 }

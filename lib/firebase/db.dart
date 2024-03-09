@@ -7,8 +7,10 @@ String collection = "users";
 String uid = AuthenticationHelper().getUID();
 
 //gets the user's info from their user ID
-Future<Map?> getUserInfo (String uid) async{
+Future<Map?> getUserInfo () async{
+  String uid = AuthenticationHelper().getUID();
   Map? data;
+
   await FirebaseFirestore.instance
     .collection(collection)
     .doc(uid)
@@ -30,7 +32,7 @@ Future<Map?> getUserInfo (String uid) async{
 
 //gets the current user's info using getUserInfo
 Future<Map?> getMyInfo() async {
-  Map? data = await getUserInfo(uid);
+  Map? data = await getUserInfo();
   return data;
 }
 
@@ -47,7 +49,7 @@ Future<bool> editUserInfo (Map<String, dynamic> data) async {
 //gets user's taskLog from their data
 Future<List> getTaskLog(String uid) async {
   List log = [];
-  await getUserInfo(uid).then((value) {
+  await getUserInfo().then((value) {
     try {
       List tempList = value!["taskLog"];
       log = tempList;
@@ -115,13 +117,12 @@ Future<Map<String, dynamic>> getUserRankDate(String range) async {
     .then((query) {
 
       for(var uid in query.docs) {
-        print(uid.id);
         Map<String, dynamic> data = uid.data();
+        int completed = 0;
+        int tasks = 0;
 
         if(data.containsKey("taskLog") && data["taskLog"].length != null) {
           List taskLog = data["taskLog"];
-          int completed = 0;
-          int tasks = 0;
 
           for(Map<String, dynamic> task in taskLog) {
             Map<String, dynamic> element = task;
@@ -134,16 +135,18 @@ Future<Map<String, dynamic>> getUserRankDate(String range) async {
                 completed++;
               } //if
             } //if
-            rank[data['nickname']] = (completed / tasks * 100).toStringAsFixed(0);
-
           } //for
-          print(rank);
+          if(tasks == 0) {
+            return {data["nickname"], 0};
+          }
 
+          else {
+            rank[data['nickname']] = (completed / tasks * 100).toStringAsFixed(0);
+          }
         } //if
-        else {
-          return {data["nickname"], 0};
-        }
+
       } //for
+
   }); //.then
 
   return rank;

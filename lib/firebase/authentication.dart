@@ -10,4 +10,8 @@ class AuthenticationHelper {
     return user.uid;
   }
 
+  Future signOut() async {
+    await auth.signOut();
+  }
 }
+

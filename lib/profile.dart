@@ -188,8 +188,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
 
                 ElevatedButton(
-                  onPressed: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInPage()));
+                  onPressed: () {
+                    AuthenticationHelper().signOut();
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const SignInPage()), (route) => false);
                   },
                   child:
                   const Text('Sign Out', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),)
