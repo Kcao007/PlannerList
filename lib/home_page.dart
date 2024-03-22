@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:coding_minds_sample/firebase/db.dart';
+import 'package:coding_minds_sample/genSchedule.dart';
+
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -34,8 +37,8 @@ class _HomePageState extends State<HomePage> {
   getLogs() async {
     getMyInfo().then((value) {
       setState(() {
-        if(value != null && value.containsKey("Schedule")) {
-          toDoTask = value["Schedule"];
+        if(value != null && value.containsKey("schedule")) {
+          toDoTask = value["schedule"];
         }
       });
     });
@@ -176,6 +179,26 @@ class _HomePageState extends State<HomePage> {
           }
         ),
 
+        actions: [
+          TextButton(
+            child: const Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }
+          ),
+
+          TextButton(
+            child: const Text("Confirm"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => GenerateSchedulePage(
+                    startDate: '${date.year}-${date.month}-${date.day}',
+                    startTime: time.format(context))))
+                    .then((value) => getLogs());
+            },
+          )
+        ]
 
       );
     });

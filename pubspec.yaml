@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.15.2
   cloud_firestore: ^4.14.0
+  flutter_dotenv: ^5.1.0
+  chat_gpt_sdk: ^2.2.8
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/toDoList.png
+    - assets/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
