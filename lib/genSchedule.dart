@@ -41,16 +41,19 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
 
   Future<void> handleInitMessage() async {
     getMyInfo().then((value) async {
-      String prompt = 'I need help scheduling my tasks that I need done before the due date. Please create a schedule for my week as a JSON file.'
+      //the prompt (had to threaten the AI a bit)
+      String prompt = 'I need help scheduling my tasks that I need done before the due date. Please create a schedule for my week as a JSON data.'
 
-      'Here are the tasks I want scheduled for me: ${value!["taskLog"]}. The schedule starts on ${widget.startDate} and ends seven days later. The time allotted for scheduling starts at ${widget.startTime} on the first day and ends at 11:59pm on the seventh day.'
+          'Here are the tasks I want scheduled for me: ${value!["taskLog"]}. The schedule starts on ${widget.startDate} and ends seven days later. The time allotted for scheduling starts at ${widget.startTime} on the first day and only the first day and ends at 11:59pm on the seventh day.'
 
-      'Create a schedule that contains the date for the task and assigns breaks between tasks based on the tasks’ priority. If the task’s duration is more than 2 hours in length, split the task up across multiple days before the due date. Pay attention to the due date and do not assign tasks to the schedule with a due date that has already passed or a due date that is not within four days after the last day of the schedule.'
+          'Create a schedule that contains the date for the task and assigns breaks between tasks based on the tasks’ priority. If the task’s duration is more than 2 hours in length, split the task up across multiple days before the due date. The previous sentence is very important. Pay attention to the due date and do not assign tasks to the schedule with a due date that has already passed or a due date that is not within four days after the last day of the schedule.'
 
-      'You must only return a JSON file with your response with no other code or message included. Do not add anything before or after the JSON file.'
+          'Please allow for eight hours of sleeping time during the normal sleeping hours. Only schedule tasks to begin after 8am and end before 10pm'
 
-      'The JSON file must be in the format of [{‘date’:<date/hour:minute am/pm>, \'task\':{\'task_name\':<task name>, \'due_date\':<date/time>, \'type\':<type>}, \'time_length\':<time_length>}].';
-      //dotenv.env["PROMPT"] as String;
+          'You must only return a JSON data with your response with no other code or message included. Start the beginning of your response with your JSON data. Do not add anything before or after the JSON data. If you add any other characters beside the JSON data a human will die. Please also ensure the JSON data is formatted correctly.'
+
+          'The JSON data must be in the format of [{‘date’:<date/hour:minute am/pm>, \'task\':{\'task_name\':<task name>, \'due_date\':<date/time>, \'type\':<type>}, \'time_length\':<time_length>}].';
+
       final request = ChatCompleteText(
         messages: [
           Messages(
@@ -63,14 +66,16 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
       );
       final response = await _openAI.onChatCompletion(request: request);
 
+      //takes the AI output thats formatted like a JSON file and reads it as one to get the schedule
       setState(() {
-        //print(response!.choices.first.message!.content.trim());
         scheduleTasks = jsonDecode(response!.choices.first.message!.content.trim());
+        //removes loading wheel
         isLoading = false;
       });
     });
   }
 
+  //saves the schedule as a key in the user data
   saveSchedule() {
     buildLoading();
     editUserInfo({"schedule": scheduleTasks}).then((value) {
@@ -80,6 +85,7 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
     });
   }
 
+  //loading wheel for during schedule generation
   buildLoading() {
     return showDialog(
         context: context,
@@ -105,7 +111,8 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Schedule Generator"),
       ),
-      
+
+      //preview of schedule to be saved
       body: Padding(
           padding: EdgeInsets.all(12),
           child: !isLoading
@@ -120,7 +127,7 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
                         'Task name: ${scheduleTasks[i]["task"]["task_name"]}\n'
                         'Due date: ${scheduleTasks[i]["task"]["due_date"]}\n'
                         'Type: ${scheduleTasks[i]["task"]["type"]}\n'
-                        'Task Length: ${scheduleTasks[i]["time_length"]}\n'
+                        'Task Length: ${scheduleTasks[i]["time_length"]}\n hours'
                           ),
                     )
                   ),
@@ -137,10 +144,11 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
           )
       ),
 
+      //calls saveSchedule to save data into the key
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.save),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        onPressed: saveSchedule(),
+        onPressed: saveSchedule,
       ),
     );
   }

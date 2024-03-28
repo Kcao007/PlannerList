@@ -31,12 +31,14 @@ class _HomePageState extends State<HomePage> {
 
       });
     });
-
   }
 
+  //for displaying the schedule within the gray box on the home page
   getLogs() async {
     getMyInfo().then((value) {
       setState(() {
+
+        //if user data contains the schedule key, copy it to toDoTask
         if(value != null && value.containsKey("schedule")) {
           toDoTask = value["schedule"];
         }
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   //prompts user to add user info to profile consistently
+  //just very annoying honestly
   Future<void> showMyDialog() async {
     showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
@@ -79,16 +82,30 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               const Text('Today\'s Schedule', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
 
+              //the box that displays the schedule
               SizedBox(
                 height: height * 0.6,
                 width: width,
-                child: const Card(
+                child: Card(
                   color: Colors.white60,
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: SingleChildScrollView(
                       child: Column(
-
+                        children: [
+                          for(int i = 0; i < toDoTask.length; i++)
+                            Card(
+                              child: ListTile(
+                                title: Text("Date/time: ${toDoTask[i]["date"]}"),
+                                subtitle: Text(
+                                    'Task name: ${toDoTask[i]["task"]["task_name"]}\n'
+                                    'Due date: ${toDoTask[i]["task"]["due_date"]}\n'
+                                    'Type: ${toDoTask[i]["task"]["type"]}\n'
+                                    'Task Length: ${toDoTask[i]["time_length"]} hours\n'
+                                ),
+                              )
+                            ),
+                        ],
                       )
                     )
                   )
@@ -105,6 +122,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
 
+        //the button for generating the schedule
         children: <Widget>[
           FloatingActionButton.extended(
             onPressed: () {
@@ -124,6 +142,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //get current date/time
   void showDateTimePicker(BuildContext context) async {
     DateTime date = DateTime.now();
     TimeOfDay time = TimeOfDay.now();
@@ -179,6 +198,7 @@ class _HomePageState extends State<HomePage> {
           }
         ),
 
+        //cancel button backs out of screen
         actions: [
           TextButton(
             child: const Text("Cancel"),
@@ -187,11 +207,13 @@ class _HomePageState extends State<HomePage> {
             }
           ),
 
+          //confirm button takes you to genSchedule.dart
           TextButton(
             child: const Text("Confirm"),
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.push(context, MaterialPageRoute(
+                //data to be used in the AI prompt
                 builder: (context) => GenerateSchedulePage(
                     startDate: '${date.year}-${date.month}-${date.day}',
                     startTime: time.format(context))))
