@@ -148,7 +148,6 @@ class _SignInPageState extends State<SignInPage> {
                   password: password
               ).then((value) {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));
-
                 }).onError((error, stackTrace) {
                   showAlertDialog(context, "Error ${error.toString()}");
                 });

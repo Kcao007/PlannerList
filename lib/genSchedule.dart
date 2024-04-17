@@ -1,3 +1,4 @@
+import 'package:coding_minds_sample/navigation.dart';
 import 'package:coding_minds_sample/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:coding_minds_sample/firebase/db.dart';
@@ -42,15 +43,17 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
   Future<void> handleInitMessage() async {
     getMyInfo().then((value) async {
       //the prompt (had to threaten the AI a bit)
-      String prompt = 'I need help scheduling my tasks that I need done before the due date. Please create a schedule for my week as a JSON data.'
+      print(value!["tasklog"]);
 
-          'Here are the tasks I want scheduled for me: ${value!["taskLog"]}. The schedule starts on ${widget.startDate} and ends seven days later. The time allotted for scheduling starts at ${widget.startTime} on the first day and only the first day and ends at 11:59pm on the seventh day.'
+      String prompt =  'I need help scheduling my tasks that I need done before the due date. Please create a schedule for my week as a JSON data.'
 
-          'Create a schedule that contains the date for the task and assigns breaks between tasks based on the tasks’ priority. If the task’s duration is more than 2 hours in length, split the task up across multiple days before the due date. The previous sentence is very important. Pay attention to the due date and do not assign tasks to the schedule with a due date that has already passed or a due date that is not within four days after the last day of the schedule.'
+          'Here are the tasks I want scheduled for me: ${value!["taskLog"]}. The schedule starts on ${widget.startDate} and ends seven days later. The time allotted for scheduling starts at ${widget.startTime} on the first day and only the first day and ends at 11:59pm on the seventh day. Ignore tasks with the taskDone key set to true.'
 
-          'Please allow for eight hours of sleeping time during the normal sleeping hours. Only schedule tasks to begin after 8am and end before 10pm'
+          'Create a schedule that contains the date for the task and assigns breaks between tasks based on the tasks’ priority. EXTREMELY IMPORTANT. Only schedule each task once. Pay attention to the due date and do not assign tasks to the schedule with a due date that has already passed or a due date that is not within four days after the last day of the schedule. The duration of each task per name should add up to TaskDuration.'
 
-          'You must only return a JSON data with your response with no other code or message included. Start the beginning of your response with your JSON data. Do not add anything before or after the JSON data. If you add any other characters beside the JSON data a human will die. Please also ensure the JSON data is formatted correctly.'
+          'EXTREMELY IMPORTANT. Do not schedule tasks during the normal sleeping hours of 10:00pm and 8:00am. Once the task is accounted for, no more occurrences of this task may be made. Once the task\'s due date has passed or the task duration is covered, do not schedule it again. Your response cannot exceed 3000 characters in length. After you assign a task, do not schedule another task for another (Task Length) hours. Do not schedule breaks as tasks; simply leave the time slot empty and start the next task after the break.'
+
+          'You must only return a JSON data with your response with no other code or message included. Start the beginning of your response with your JSON data. Do not add anything before or after the JSON data. Also ensure that you do not end your response without properly ending the JSON data. If you add any other characters beside the JSON data a human will die.'
 
           'The JSON data must be in the format of [{‘date’:<date/hour:minute am/pm>, \'task\':{\'task_name\':<task name>, \'due_date\':<date/time>, \'type\':<type>}, \'time_length\':<time_length>}].';
 
@@ -61,13 +64,14 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
             content: prompt,
           )
         ],
-        maxToken: 1500,
+        maxToken: 3000,
         model: GptTurbo0631Model(),
       );
       final response = await _openAI.onChatCompletion(request: request);
 
       //takes the AI output thats formatted like a JSON file and reads it as one to get the schedule
       setState(() {
+        print(response!.choices.first.message!.content.trim());
         scheduleTasks = jsonDecode(response!.choices.first.message!.content.trim());
         //removes loading wheel
         isLoading = false;
@@ -148,7 +152,10 @@ class _GenerateSchedulePageState extends State<GenerateSchedulePage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.save),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        onPressed: saveSchedule,
+        onPressed: //() {
+          saveSchedule,
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NavigationPage()));
+        //}
       ),
     );
   }
